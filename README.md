@@ -1,3 +1,3 @@
 # MusicDemo
-modified android music original app
+A modified original android music application.
 MusicDemo
