@@ -18,7 +18,7 @@
         package="com.android.music">
 
     <original-package android:name="com.android.music" />
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="9"/>
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="9"/>
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -27,7 +27,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
 
-    <application android:icon="@drawable/ic_lancher"
+    <application android:icon="@drawable/ic_launcher"
         android:label="@string/musicbrowserlabel"
         android:taskAffinity="android.task.music"
         android:allowTaskReparenting="true"
