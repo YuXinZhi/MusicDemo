@@ -169,6 +169,7 @@ public class TrackBrowserActivity extends ListActivity
             mTrackList.setDivider(null);
             mTrackList.setSelector(R.drawable.list_selector_background);
         } else {
+        	//启用或禁用型过滤器窗口。如果启用，打字的时候这种观点的重点将筛选
             mTrackList.setTextFilterEnabled(true);
         }
         mAdapter = (TrackListAdapter) getLastNonConfigurationInstance();
@@ -190,6 +191,7 @@ public class TrackBrowserActivity extends ListActivity
 
     public void onServiceConnected(ComponentName name, IBinder service)
     {
+    	//监听存储状态
         IntentFilter f = new IntentFilter();
         f.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
         f.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);

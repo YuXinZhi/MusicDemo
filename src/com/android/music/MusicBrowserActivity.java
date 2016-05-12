@@ -26,62 +26,61 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 
-public class MusicBrowserActivity extends Activity
-    implements MusicUtils.Defs {
+public class MusicBrowserActivity extends Activity implements MusicUtils.Defs {
 
-    private ServiceToken mToken;
+	private ServiceToken mToken;
 
-    public MusicBrowserActivity() {
-    }
+	public MusicBrowserActivity() {
+	}
 
-    /**
-     * Called when the activity is first created.
-     */
-    @Override
-    public void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-        int activeTab = MusicUtils.getIntPref(this, "activetab", R.id.artisttab);
-        if (activeTab != R.id.artisttab
-                && activeTab != R.id.albumtab
-                && activeTab != R.id.songtab
-                && activeTab != R.id.playlisttab) {
-            activeTab = R.id.artisttab;
-        }
-        MusicUtils.activateTab(this, activeTab);
-        
-        String shuf = getIntent().getStringExtra("autoshuffle");
-        if ("true".equals(shuf)) {
-            mToken = MusicUtils.bindToService(this, autoshuffle);
-        }
-    }
+	/**
+	 * Called when the activity is first created.
+	 */
+	@Override
+	public void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
+		// 获取保存的激活tab
+		int activeTab = MusicUtils.getIntPref(this, "activetab", R.id.artisttab);
+		if (activeTab != R.id.artisttab && activeTab != R.id.albumtab && activeTab != R.id.songtab
+				&& activeTab != R.id.playlisttab) {
 
-    @Override
-    public void onDestroy() {
-        if (mToken != null) {
-            MusicUtils.unbindFromService(mToken);
-        }
-        super.onDestroy();
-    }
+			activeTab = R.id.artisttab;
+		}
+		// 根据保存的tab激活默认是 artisttab
+		MusicUtils.activateTab(this, activeTab);
 
-    private ServiceConnection autoshuffle = new ServiceConnection() {
-        public void onServiceConnected(ComponentName classname, IBinder obj) {
-            // we need to be able to bind again, so unbind
-            try {
-                unbindService(this);
-            } catch (IllegalArgumentException e) {
-            }
-            IMediaPlaybackService serv = IMediaPlaybackService.Stub.asInterface(obj);
-            if (serv != null) {
-                try {
-                    serv.setShuffleMode(MediaPlaybackService.SHUFFLE_AUTO);
-                } catch (RemoteException ex) {
-                }
-            }
-        }
+		String shuf = getIntent().getStringExtra("autoshuffle");
+		if ("true".equals(shuf)) {
+			mToken = MusicUtils.bindToService(this, autoshuffle);
+		}
+	}
 
-        public void onServiceDisconnected(ComponentName classname) {
-        }
-    };
+	@Override
+	public void onDestroy() {
+		if (mToken != null) {
+			MusicUtils.unbindFromService(mToken);
+		}
+		super.onDestroy();
+	}
+
+	private ServiceConnection autoshuffle = new ServiceConnection() {
+		public void onServiceConnected(ComponentName classname, IBinder obj) {
+			// we need to be able to bind again, so unbind
+			try {
+				unbindService(this);
+			} catch (IllegalArgumentException e) {
+			}
+			IMediaPlaybackService serv = IMediaPlaybackService.Stub.asInterface(obj);
+			if (serv != null) {
+				try {
+					serv.setShuffleMode(MediaPlaybackService.SHUFFLE_AUTO);
+				} catch (RemoteException ex) {
+				}
+			}
+		}
+
+		public void onServiceDisconnected(ComponentName classname) {
+		}
+	};
 
 }
-
