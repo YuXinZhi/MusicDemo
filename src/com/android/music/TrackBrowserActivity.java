@@ -91,7 +91,7 @@ public class TrackBrowserActivity extends ListActivity
 	private String mAlbumId;
 	private String mArtistId;
 	private String mPlaylist;
-	private String mGenre;
+	private String mGenre;// 流派
 	private String mSortOrder;
 	private int mSelectedPosition;
 	private long mSelectedId;
@@ -104,6 +104,7 @@ public class TrackBrowserActivity extends ListActivity
 	}
 
 	/** Called when the activity is first created. */
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
@@ -115,7 +116,9 @@ public class TrackBrowserActivity extends ListActivity
 			}
 		}
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
 		if (icicle != null) {
+			// 上次的记录
 			mSelectedId = icicle.getLong("selectedtrack");
 			mAlbumId = icicle.getString("album");
 			mArtistId = icicle.getString("artist");
@@ -132,6 +135,7 @@ public class TrackBrowserActivity extends ListActivity
 			mEditMode = intent.getAction().equals(Intent.ACTION_EDIT);
 		}
 
+		// 查询的字段
 		mCursorCols = new String[] { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.TITLE,
 				MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST,
 				MediaStore.Audio.Media.ARTIST_ID, MediaStore.Audio.Media.DURATION };
@@ -141,11 +145,18 @@ public class TrackBrowserActivity extends ListActivity
 				MediaStore.Audio.Playlists.Members.PLAY_ORDER, MediaStore.Audio.Playlists.Members.AUDIO_ID,
 				MediaStore.Audio.Media.IS_MUSIC };
 
+		// 界面
 		setContentView(R.layout.media_picker_activity);
+		// 更新顶部tab
 		mUseLastListPos = MusicUtils.updateButtonBar(this, R.id.songtab);
+		// 获得listview
 		mTrackList = getListView();
+		// 设置上下文菜单监听
 		mTrackList.setOnCreateContextMenuListener(this);
+		// 设置listview按下后 的颜色
 		mTrackList.setCacheColorHint(0);
+		// 判断是否在编辑模式
+		// 第一次进入时默认为false
 		if (mEditMode) {
 			((TouchInterceptor) mTrackList).setDropListener(mDropListener);
 			((TouchInterceptor) mTrackList).setRemoveListener(mRemoveListener);
@@ -155,8 +166,13 @@ public class TrackBrowserActivity extends ListActivity
 			// 启用或禁用型过滤器窗口。如果启用，打字的时候这种观点的重点将筛选
 			mTrackList.setTextFilterEnabled(true);
 		}
+
+		// Retrieve the non-configuration instance data that was previously
+		// returned by onRetainNonConfigurationInstance()
+		// 获取onRetainNonConfigurationInstance()保存的适配器
 		mAdapter = (TrackListAdapter) getLastNonConfigurationInstance();
 
+		//如果适配器为null则设置适配器
 		if (mAdapter != null) {
 			mAdapter.setActivity(this);
 			setListAdapter(mAdapter);
@@ -334,6 +350,7 @@ public class TrackBrowserActivity extends ListActivity
 		// need to store the selected item so we don't lose it in case
 		// of an orientation switch. Otherwise we could lose it while
 		// in the middle of specifying a playlist to add the item to.
+		// 当方向转变时，需要保存当前播放歌曲的信息
 		outcicle.putLong("selectedtrack", mSelectedId);
 		outcicle.putString("artist", mArtistId);
 		outcicle.putString("album", mAlbumId);
@@ -345,9 +362,11 @@ public class TrackBrowserActivity extends ListActivity
 
 	public void init(Cursor newCursor, boolean isLimited) {
 
+		// 没有适配器返回
 		if (mAdapter == null) {
 			return;
 		}
+
 		mAdapter.changeCursor(newCursor); // also sets mTrackCursor
 
 		if (mTrackCursor == null) {
@@ -1276,6 +1295,7 @@ public class TrackBrowserActivity extends ListActivity
 		private IMediaPlaybackService mService;
 	}
 
+	// 歌曲适配器
 	static class TrackListAdapter extends SimpleCursorAdapter implements SectionIndexer {
 		boolean mIsNowPlaying;
 		boolean mDisableNowPlayingIndicator;
@@ -1344,8 +1364,7 @@ public class TrackBrowserActivity extends ListActivity
 
 			@Override
 			protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-				// Log.i("@@@", "query complete: " + cursor.getCount() + " " +
-				// mActivity);
+				Log.i("@@@", "query complete: " + cursor.getCount() + " " + mActivity);
 				mActivity.init(cursor, cookie != null);
 				if (token == 0 && cookie != null && cursor != null && !cursor.isClosed() && cursor.getCount() >= 100) {
 					QueryArgs args = (QueryArgs) cookie;
@@ -1418,6 +1437,7 @@ public class TrackBrowserActivity extends ListActivity
 
 			ViewHolder vh = (ViewHolder) view.getTag();
 
+			// 把mTitleIdx列的值赋给
 			cursor.copyStringToBuffer(mTitleIdx, vh.buffer1);
 			vh.line1.setText(vh.buffer1.data, 0, vh.buffer1.sizeCopied);
 

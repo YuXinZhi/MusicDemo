@@ -631,6 +631,37 @@ public class MusicUtils {
 		return result;
 	}
 
+	/**
+	 * 我们在开发程序是经常会需要软件全屏显示、自定义标题（使用按钮等控件）和其他的需求，今天这一讲就是如何控制Android应用程序的窗体显示.
+	 * 
+	 * 首先介绍一个重要方法那就是requestWindowFeature(featrueId),它的功能是启用窗体的扩展特性。
+	 * 参数是Window类中定义的常量。
+	 * 
+	 * 一、枚举常量
+	 * 
+	 * 1.DEFAULT_FEATURES：系统默认状态，一般不需要指定
+	 * 
+	 * 2.FEATURE_CONTEXT_MENU：启用ContextMenu，默认该项已启用，一般无需指定
+	 * 
+	 * 3.FEATURE_CUSTOM_TITLE：自定义标题。当需要自定义标题时必须指定。如：标题是一个按钮时
+	 * 
+	 * 4.FEATURE_INDETERMINATE_PROGRESS：不确定的进度，圆圈
+	 * 
+	 * 5.FEATURE_LEFT_ICON：标题栏左侧的图标
+	 * 
+	 * 6.FEATURE_NO_TITLE：无标题
+	 * 
+	 * 7.FEATURE_OPTIONS_PANEL：启用“选项面板”功能，默认已启用。
+	 * 
+	 * 8.FEATURE_PROGRESS：进度指示器功能
+	 * 
+	 * 9.FEATURE_RIGHT_ICON:标题栏右侧的图标
+	 */
+	/**
+	 * FEATURE_INDETERMINATE_PROGRESS 表示一个进程正在运行
+	 * 
+	 * @param a
+	 */
 	public static void setSpinnerState(Activity a) {
 		if (isMediaScannerScanning(a)) {
 			// start the progress spinner
