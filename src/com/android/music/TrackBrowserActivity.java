@@ -17,7 +17,7 @@
 package com.android.music;
 
 import com.android.music.MusicUtils.ServiceToken;
-
+import android.annotation.SuppressLint;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;
@@ -65,6 +65,13 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import java.text.Collator;
 import java.util.Arrays;
 
+/**
+ * ****************************************找到数据源
+ * 
+ * 
+ * @author Ben
+ *
+ */
 public class TrackBrowserActivity extends ListActivity
 		implements View.OnCreateContextMenuListener, MusicUtils.Defs, ServiceConnection {
 	private static final int Q_SELECTED = CHILD_MENU_BASE;
@@ -172,7 +179,7 @@ public class TrackBrowserActivity extends ListActivity
 		// 获取onRetainNonConfigurationInstance()保存的适配器
 		mAdapter = (TrackListAdapter) getLastNonConfigurationInstance();
 
-		//如果适配器为null则设置适配器
+		// 如果适配器为null则设置适配器
 		if (mAdapter != null) {
 			mAdapter.setActivity(this);
 			setListAdapter(mAdapter);
@@ -1259,6 +1266,7 @@ public class TrackBrowserActivity extends ListActivity
 			return mCurrentPlaylistCursor.getDouble(column);
 		}
 
+		@SuppressLint("NewApi")
 		@Override
 		public int getType(int column) {
 			return mCurrentPlaylistCursor.getType(column);
